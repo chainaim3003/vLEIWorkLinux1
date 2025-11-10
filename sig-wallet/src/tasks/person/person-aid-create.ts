@@ -5,10 +5,11 @@ const args = process.argv.slice(2);
 const env = args[0] as 'docker' | 'testnet';
 const personPasscode = args[1];
 const dataDir = args[2];
+const personAlias = args[3] || 'person';  // Use provided alias or default to 'person'
 
 // get client and create Person AID
 const client = await getOrCreateClient(personPasscode, env);
-const personInfo: any = await createAid(client, 'person');
+const personInfo: any = await createAid(client, personAlias);
 
 // Use synchronous writes
 fs.writeFileSync(`${dataDir}/person-aid.txt`, personInfo.aid);

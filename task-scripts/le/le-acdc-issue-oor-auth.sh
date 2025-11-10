@@ -36,19 +36,26 @@ LE_CRED_SAID=$(jq -r '.said' ./task-data/le-credential-info.json)
 PERSON_NAME="${1:-John Smith}"
 PERSON_OOR="${2:-Head of Standards}"
 LE_LEI="${3:-254900OPPU84GM83MG36}"
+LE_ALIAS="${4:-le}"  # Accept LE alias as 4th parameter, default to 'le'
 
 # Issue the OOR Auth credential
 if [ -n "$1" ]; then
     echo "Issuing OOR Auth credential to ${QVI_AID} for person ${PERSON_NAME} (${PERSON_OOR}) with LEI ${LE_LEI} (from parameters)"
+    echo "Using LE alias: ${LE_ALIAS}"
 else
     echo "Issuing OOR Auth credential to ${QVI_AID} for person ${PERSON_NAME} (${PERSON_OOR}) with LEI ${LE_LEI} (defaults - hardcoded)"
+    echo "Using LE alias: ${LE_ALIAS}"
 fi
+# Use dynamic registry name based on LE alias
+REGISTRY_NAME="${LE_ALIAS}-oor-registry"
+echo "Using registry: ${REGISTRY_NAME}"
+
 docker compose exec tsx-shell \
   /vlei/tsx-script-runner.sh le/le-acdc-issue-oor-auth.ts \
     'docker' \
-    'le' \
+    "${LE_ALIAS}" \
     "${LE_SALT}" \
-    "le-oor-registry" \
+    "${REGISTRY_NAME}" \
     "${OOR_AUTH_SCHEMA_SAID}" \
     "${QVI_AID}" \
     "${PERSON_AID}" \

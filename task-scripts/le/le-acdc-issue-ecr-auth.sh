@@ -32,18 +32,25 @@ PERSON_AID=$(jq -r '.aid' ./task-data/person-info.json)
 # get LE Credential SAID from le-credential-info.json for the edge
 LE_CRED_SAID=$(jq -r '.said' ./task-data/le-credential-info.json)
 
-# Sample person data for ECR Auth credential
-PERSON_NAME="John Smith"
-PERSON_ECR="Project Manager"
+# Accept parameters or use defaults
+PERSON_NAME="${1:-John Smith}"
+PERSON_ECR="${2:-Project Manager}"
+LE_ALIAS="${3:-le}"  # Accept LE alias as 3rd parameter
+
+# Use dynamic registry name based on LE alias
+REGISTRY_NAME="${LE_ALIAS}-oor-registry"
 
 # Issue the ECR Auth credential
 echo "Issuing ECR Auth credential to ${QVI_AID} for person ${PERSON_NAME}"
+echo "Using LE alias: ${LE_ALIAS}"
+echo "Using registry: ${REGISTRY_NAME}"
+
 docker compose exec tsx-shell \
   /vlei/tsx-script-runner.sh le/le-acdc-issue-ecr-auth.ts \
     'docker' \
-    'le' \
+    "${LE_ALIAS}" \
     "${LE_SALT}" \
-    "le-oor-registry" \
+    "${REGISTRY_NAME}" \
     "${ECR_AUTH_SCHEMA_SAID}" \
     "${QVI_AID}" \
     "${PERSON_AID}" \

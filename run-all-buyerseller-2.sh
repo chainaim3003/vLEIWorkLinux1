@@ -150,7 +150,7 @@ for ((org_idx=0; org_idx<$ORG_COUNT; org_idx++)); do
     
     # LE AID Creation
     echo -e "${BLUE}  → Creating LE AID for $ORG_NAME...${NC}"
-    ./task-scripts/le/le-aid-create.sh
+    ./task-scripts/le/le-aid-create.sh "$ORG_ALIAS"
     
     # OOBI Resolution between LE and QVI
     echo -e "${BLUE}  → Resolving OOBI between LE and QVI...${NC}"
@@ -165,12 +165,12 @@ for ((org_idx=0; org_idx<$ORG_COUNT; org_idx++)); do
     echo -e "${GREEN}    ✓ Using LEI $ORG_LEI from configuration${NC}"
     ./task-scripts/qvi/qvi-acdc-issue-le.sh "$ORG_LEI"
     
-    ./task-scripts/le/le-acdc-admit-le.sh
+    ./task-scripts/le/le-acdc-admit-le.sh "$ORG_ALIAS"
     
     # LE presents credential to verifier
     echo -e "${BLUE}  → LE presents credential to verifier...${NC}"
     ./task-scripts/le/le-oobi-resolve-verifier.sh
-    ./task-scripts/le/le-acdc-present-le.sh
+    ./task-scripts/le/le-acdc-present-le.sh "$ORG_ALIAS"
     
     echo -e "${GREEN}  ✓ LE credential issued and presented for $ORG_NAME${NC}"
     echo ""
@@ -199,7 +199,7 @@ for ((org_idx=0; org_idx<$ORG_COUNT; org_idx++)); do
         
         # Person AID Creation
         echo -e "${BLUE}      → Creating Person AID...${NC}"
-        ./task-scripts/person/person-aid-create.sh
+        ./task-scripts/person/person-aid-create.sh "$PERSON_ALIAS"
         
         # OOBI Resolution (Person with LE, QVI, and Verifier)
         echo -e "${BLUE}      → Resolving OOBIs for Person...${NC}"
@@ -211,23 +211,23 @@ for ((org_idx=0; org_idx<$ORG_COUNT; org_idx++)); do
         
         # OOR Credential Issuance (2-step process)
         echo -e "${BLUE}      → Creating LE registry for OOR credentials...${NC}"
-        ./task-scripts/le/le-registry-create.sh
+        ./task-scripts/le/le-registry-create.sh "$ORG_ALIAS"
         
         # Step 1: LE issues OOR_AUTH to QVI
         echo -e "${BLUE}      → LE issues OOR_AUTH credential for $PERSON_NAME...${NC}"
         echo -e "${GREEN}        ✓ Using person: $PERSON_NAME, role: $PERSON_ROLE, LEI: $ORG_LEI from configuration${NC}"
-        ./task-scripts/le/le-acdc-issue-oor-auth.sh "$PERSON_NAME" "$PERSON_ROLE" "$ORG_LEI"
+        ./task-scripts/le/le-acdc-issue-oor-auth.sh "$PERSON_NAME" "$PERSON_ROLE" "$ORG_LEI" "$ORG_ALIAS"
         ./task-scripts/qvi/qvi-acdc-admit-oor-auth.sh
         
         # Step 2: QVI issues OOR to Person
         echo -e "${BLUE}      → QVI issues OOR credential to $PERSON_NAME...${NC}"
         echo -e "${GREEN}        ✓ Using person: $PERSON_NAME, role: $PERSON_ROLE, LEI: $ORG_LEI from configuration${NC}"
         ./task-scripts/qvi/qvi-acdc-issue-oor.sh "$PERSON_NAME" "$PERSON_ROLE" "$ORG_LEI"
-        ./task-scripts/person/person-acdc-admit-oor.sh
+        ./task-scripts/person/person-acdc-admit-oor.sh "$PERSON_ALIAS"
         
         # Person presents OOR credential to verifier
         echo -e "${BLUE}      → Person presents OOR credential to verifier...${NC}"
-        ./task-scripts/person/person-acdc-present-oor.sh
+        ./task-scripts/person/person-acdc-present-oor.sh "$PERSON_ALIAS"
         
         echo -e "${GREEN}      ✓ OOR credential issued and presented for $PERSON_NAME${NC}"
         echo ""
