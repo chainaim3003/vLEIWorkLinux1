@@ -9,7 +9,17 @@ const dataDir = args[2];
 // get client and create Person AID
 const client = await getOrCreateClient(personPasscode, env);
 const personInfo: any = await createAid(client, 'person');
-await fs.promises.writeFile(`${dataDir}/person-aid.txt`, personInfo.aid);
-await fs.promises.writeFile(`${dataDir}/person-info.json`, JSON.stringify(personInfo));
-console.log(`Person info written to ${dataDir}/person-*`)
 
+// Use synchronous writes
+fs.writeFileSync(`${dataDir}/person-aid.txt`, personInfo.aid);
+fs.writeFileSync(`${dataDir}/person-info.json`, JSON.stringify(personInfo, null, 2));
+
+// Verify files were written
+if (!fs.existsSync(`${dataDir}/person-aid.txt`)) {
+    throw new Error(`Failed to write ${dataDir}/person-aid.txt`);
+}
+if (!fs.existsSync(`${dataDir}/person-info.json`)) {
+    throw new Error(`Failed to write ${dataDir}/person-info.json`);
+}
+
+console.log(`Person info written to ${dataDir}/person-*`)

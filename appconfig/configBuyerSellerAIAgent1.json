@@ -5,7 +5,7 @@
   },
   "qvi": {
     "alias": "QVI",
-    "lei": "254900OPPU84GM83MG36",
+    "lei": "",
     "registryName": "QVI_REGISTRY"
   },
   "organizations": [
@@ -20,10 +20,11 @@
           "alias": "Jupiter_Chief_Sales_Officer",
           "legalName": "Chief Sales Officer",
           "officialRole": "ChiefSalesOfficer",
-          "agents": [
+           "agents": [
             {
-              "alias": "jupiterSellerAgent",
-              "engagementContextRole": "Seller Agent",
+              "alias": "jupitedSellerAgent",
+              "delegatorAID":"",
+              "delegateeAID":"",
               "agentType": "AI"
             }
           ]
@@ -44,7 +45,8 @@
           "agents": [
             {
               "alias": "tommyBuyerAgent",
-              "engagementContextRole": "Buyer Agent",
+              "delegatorAID":"",
+              "delegateeAID":"",
               "agentType": "AI"
             }
           ]

@@ -14,5 +14,13 @@ const registryInfoPath = args[4];
 // get client and create registry
 const client = await getOrCreateClient(passcode, env);
 const registryInfo: any = await createRegistry(client, aidName, registryName);
-await fs.promises.writeFile(registryInfoPath, JSON.stringify(registryInfo));
+
+// Use synchronous write
+fs.writeFileSync(registryInfoPath, JSON.stringify(registryInfo, null, 2));
+
+// Verify file was written
+if (!fs.existsSync(registryInfoPath)) {
+    throw new Error(`Failed to write ${registryInfoPath}`);
+}
+
 console.log(`Registry info written to ${registryInfoPath}`)

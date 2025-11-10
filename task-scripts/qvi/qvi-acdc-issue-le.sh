@@ -26,11 +26,15 @@ fi
 # get LE AID from le-info.json
 LE_AID=$(jq -r '.aid' ./task-data/le-info.json)
 
-# LEI for LE credential - sample
-LE_LEI="254900OPPU84GM83MG36"
+# LEI for LE credential - accept as parameter or use default
+LE_LEI="${1:-254900OPPU84GM83MG36}"
 
 # Issue the LE credential
-echo "Issuing LE credential to ${LE_AID} with LEI ${LE_LEI}"
+if [ -n "$1" ]; then
+    echo "Issuing LE credential to ${LE_AID} with LEI ${LE_LEI} (from parameter)"
+else
+    echo "Issuing LE credential to ${LE_AID} with LEI ${LE_LEI} (default - hardcoded)"
+fi
 docker compose exec tsx-shell \
   /vlei/tsx-script-runner.sh qvi/qvi-acdc-issue-le.ts \
     'docker' \

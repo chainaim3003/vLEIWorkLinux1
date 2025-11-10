@@ -46,14 +46,28 @@ async function finishDelegation(
 
 const dgtClient = await getOrCreateClient(passcode, env);
 
-// Read delegator info
-const dgrInfo = JSON.parse(await fs.promises.readFile(delegatorInfoPath, 'utf-8'));
+// Read delegator info - use synchronous read
+if (!fs.existsSync(delegatorInfoPath)) {
+    throw new Error(`Delegator info file not found: ${delegatorInfoPath}`);
+}
+const dgrInfo = JSON.parse(fs.readFileSync(delegatorInfoPath, 'utf-8'));
 
-// Read delegate inception info
-const dgtInfo = JSON.parse(await fs.promises.readFile(delegateInfoPath, 'utf-8'));
+// Read delegate inception info - use synchronous read
+if (!fs.existsSync(delegateInfoPath)) {
+    throw new Error(`Delegate info file not found: ${delegateInfoPath}`);
+}
+const dgtInfo = JSON.parse(fs.readFileSync(delegateInfoPath, 'utf-8'));
 console.log(`${delegateAidName} delegate info`, dgtInfo);
 
 // finish delegation and write data to file
 const delegationInfo: any = await finishDelegation(dgtClient, dgrInfo.aid, delegateAidName, dgtInfo.icpOpName);
-await fs.promises.writeFile(delegateOutputPath, JSON.stringify(delegationInfo));
+
+// Use synchronous write
+fs.writeFileSync(delegateOutputPath, JSON.stringify(delegationInfo, null, 2));
+
+// Verify file was written
+if (!fs.existsSync(delegateOutputPath)) {
+    throw new Error(`Failed to write ${delegateOutputPath}`);
+}
+
 console.log(`Delegate data written to ${delegateOutputPath}`);

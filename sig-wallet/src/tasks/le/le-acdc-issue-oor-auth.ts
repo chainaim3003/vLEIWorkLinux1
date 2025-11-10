@@ -15,7 +15,8 @@ const personAid = args[6];
 const personName = args[7];
 const personOor = args[8];
 const leCredSaid = args[9];
-const oorAuthCredentialInfoPath = args[10];
+const leLei = args[10];
+const oorAuthCredentialInfoPath = args[11];
 
 // get client and issue OOR Auth ACDC
 const client = await getOrCreateClient(passcode, env);
@@ -47,7 +48,7 @@ const credRules = {
 
 const oorAuthCredData = {
     AID: personAid,
-    LEI: '254900OPPU84GM83MG36', // Same LEI as LE credential
+    LEI: leLei, // LEI from configuration
     personLegalName: personName,
     officialRole: personOor
 };

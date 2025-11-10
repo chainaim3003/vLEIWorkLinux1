@@ -29,12 +29,17 @@ PERSON_AID=$(jq -r '.aid' ./task-data/person-info.json)
 # get OOR Auth Credential SAID from oor-auth-credential-info.json for the edge
 OOR_AUTH_CRED_SAID=$(jq -r '.said' ./task-data/oor-auth-credential-info.json)
 
-# Sample person data for OOR credential (same as OOR Auth)
-PERSON_NAME="John Smith"
-PERSON_OOR="Head of Standards"
+# Person data for OOR credential - accept as parameters or use defaults
+PERSON_NAME="${1:-John Smith}"
+PERSON_OOR="${2:-Head of Standards}"
+LE_LEI="${3:-254900OPPU84GM83MG36}"
 
 # Issue the OOR credential
-echo "Issuing OOR credential to ${PERSON_AID} for person ${PERSON_NAME}"
+if [ -n "$1" ]; then
+    echo "Issuing OOR credential to ${PERSON_AID} for person ${PERSON_NAME} (${PERSON_OOR}) with LEI ${LE_LEI} (from parameters)"
+else
+    echo "Issuing OOR credential to ${PERSON_AID} for person ${PERSON_NAME} (${PERSON_OOR}) with LEI ${LE_LEI} (defaults - hardcoded)"
+fi
 docker compose exec tsx-shell \
   /vlei/tsx-script-runner.sh qvi/qvi-acdc-issue-oor.ts \
     'docker' \
@@ -46,4 +51,5 @@ docker compose exec tsx-shell \
     "${PERSON_NAME}" \
     "${PERSON_OOR}" \
     "${OOR_AUTH_CRED_SAID}" \
+    "${LE_LEI}" \
     "/task-data/oor-credential-info.json"
