@@ -11,16 +11,19 @@ const leAlias = args[3] || 'le';  // Use provided alias or default to 'le'
 const client = await getOrCreateClient(lePasscode, env);
 const leInfo: any = await createAid(client, leAlias);
 
-// Use synchronous writes
+// Use synchronous writes with alias-based filenames
+fs.writeFileSync(`${dataDir}/${leAlias}-aid.txt`, leInfo.aid);
+fs.writeFileSync(`${dataDir}/${leAlias}-info.json`, JSON.stringify(leInfo, null, 2));
+
+// Also write legacy format for backwards compatibility
 fs.writeFileSync(`${dataDir}/le-aid.txt`, leInfo.aid);
 fs.writeFileSync(`${dataDir}/le-info.json`, JSON.stringify(leInfo, null, 2));
 
 // Verify files were written
-if (!fs.existsSync(`${dataDir}/le-aid.txt`)) {
-    throw new Error(`Failed to write ${dataDir}/le-aid.txt`);
-}
-if (!fs.existsSync(`${dataDir}/le-info.json`)) {
-    throw new Error(`Failed to write ${dataDir}/le-info.json`);
+if (!fs.existsSync(`${dataDir}/${leAlias}-info.json`)) {
+    throw new Error(`Failed to write ${dataDir}/${leAlias}-info.json`);
 }
 
 console.log(`LE info written to ${dataDir}/le-*`)
+console.log(`   Prefix: ${leInfo.aid}`)
+console.log(`   OOBI: ${leInfo.oobi}`)

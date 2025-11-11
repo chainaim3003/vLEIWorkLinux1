@@ -11,16 +11,19 @@ const personAlias = args[3] || 'person';  // Use provided alias or default to 'p
 const client = await getOrCreateClient(personPasscode, env);
 const personInfo: any = await createAid(client, personAlias);
 
-// Use synchronous writes
+// Use synchronous writes with alias-based filenames
+fs.writeFileSync(`${dataDir}/${personAlias}-aid.txt`, personInfo.aid);
+fs.writeFileSync(`${dataDir}/${personAlias}-info.json`, JSON.stringify(personInfo, null, 2));
+
+// Also write legacy format for backwards compatibility
 fs.writeFileSync(`${dataDir}/person-aid.txt`, personInfo.aid);
 fs.writeFileSync(`${dataDir}/person-info.json`, JSON.stringify(personInfo, null, 2));
 
 // Verify files were written
-if (!fs.existsSync(`${dataDir}/person-aid.txt`)) {
-    throw new Error(`Failed to write ${dataDir}/person-aid.txt`);
-}
-if (!fs.existsSync(`${dataDir}/person-info.json`)) {
-    throw new Error(`Failed to write ${dataDir}/person-info.json`);
+if (!fs.existsSync(`${dataDir}/${personAlias}-info.json`)) {
+    throw new Error(`Failed to write ${dataDir}/${personAlias}-info.json`);
 }
 
-console.log(`Person info written to ${dataDir}/person-*`)
+console.log(`Person info written to ${dataDir}/${personAlias}-*`)
+console.log(`   Prefix: ${personInfo.aid}`)
+console.log(`   OOBI: ${personInfo.oobi}`)
