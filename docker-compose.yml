@@ -58,7 +58,10 @@ services:
       <<: *python-envs
     healthcheck:
       test: python3 -c "import urllib.request; urllib.request.urlopen('http://127.0.0.1:5642/oobi')"
-      <<: *healthcheck
+      interval: 3s
+      timeout: 3s
+      retries: 4
+      start_period: 10s
     command: witness demo --loglevel INFO
     volumes:
       - ./config/witnesses:/keripy/scripts/keri/cf/main
@@ -134,6 +137,29 @@ services:
       - "9723:9723"
     entrypoint: "/sally/entry-point.sh"
     depends_on:
+      schema:
+        condition: service_healthy
+
+  # KERI-enabled Agent Delegation Verification Service
+  vlei-verification:
+    build:
+      context: ./config/verifier-sally
+      dockerfile: Dockerfile.verification-keri
+      no_cache: true
+    container_name: vlei_verification
+    hostname: vlei-verification
+    stop_grace_period: 1s
+    environment:
+      <<: *python-envs
+      KERIA_URL: http://keria:3902
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://127.0.0.1:9723/health" ]
+      <<: *healthcheck
+    ports:
+      - "9724:9723"
+    depends_on:
+      keria:
+        condition: service_healthy
       schema:
         condition: service_healthy
 
