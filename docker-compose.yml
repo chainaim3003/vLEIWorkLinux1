@@ -141,6 +141,7 @@ services:
     image: gleif/wkshp-tsx-shell:latest
     build:
       context: ./sig-wallet
+      no_cache: true
     container_name: tsx_shell
     hostname: tsx_shell
     stop_grace_period: 1s

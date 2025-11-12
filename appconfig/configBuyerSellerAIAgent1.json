@@ -22,7 +22,7 @@
           "officialRole": "ChiefSalesOfficer",
            "agents": [
             {
-              "alias": "jupitedSellerAgent",
+              "alias": "jupiterSellerAgent",
               "delegatorAID":"",
               "delegateeAID":"",
               "agentType": "AI"

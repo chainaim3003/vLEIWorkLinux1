@@ -38,7 +38,7 @@ console.log(`Verifying delegation for agent ${agentName}`);
 console.log(`Agent AID: ${agentInfo.aid}`);
 console.log(`OOR Holder AID: ${oorHolderInfo.aid}`);
 
-const sallyUrl = 'http://verifier:9723/verify/agent-delegation';
+const sallyUrl = 'http://vlei-verification:9723/verify/agent-delegation';
 console.log(`Calling Sally verifier at ${sallyUrl}`);
 
 try {
@@ -46,9 +46,9 @@ try {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
+            aid: oorHolderInfo.aid,
             agent_aid: agentInfo.aid,
-            oor_holder_aid: oorHolderInfo.aid,
-            verify_oor_credential: true
+            verify_kel: false
         })
     });
 
