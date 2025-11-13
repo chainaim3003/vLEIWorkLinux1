@@ -8,8 +8,13 @@ echo "🚀 Setting up vLEI Environment..."
 # =====================================
 # Uncomment the following lines if you want to automatically copy your project
 # from the Windows directory to your Linux ~/projects folder.
+
 # mkdir -p ~/projects
 # cp -r /mnt/c/CHAINAIM3003/mcp-servers/vLEINew1/vlei-hackathon-2025-workshop-master ~/projects/
+
+#cp -r /mnt/c/SATHYA/CHAINAIM3003/mcp-servers/stellarboston/vLEI1/vLEIWorkLinux1/* ~/projects/vLEIWorkLinux1/
+
+# IF you have already created the project, please navigate to that dir.
 # cd ~/projects/vLEIWorkLinux1
 
 # =====================================
