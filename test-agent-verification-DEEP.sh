@@ -10,6 +10,7 @@ AGENT_NAME="${1:-jupiterSellerAgent}"
 OOR_HOLDER_NAME="${2:-Jupiter_Chief_Sales_Officer}"
 ENV="${3:-docker}"
 
+
 # TWO PASSCODES needed!
 AGENT_PASSCODE="AgentPass123"
 OOR_PASSCODE="0ADckowyGuNwtJUPLeRqZvTp"
@@ -17,6 +18,7 @@ OOR_PASSCODE="0ADckowyGuNwtJUPLeRqZvTp"
 echo "Configuration:"
 echo "  Agent: ${AGENT_NAME}"
 echo "  OOR Holder: ${OOR_HOLDER_NAME}"
+echo "  ENV: ${ENV}" # Changed
 echo "  Agent Passcode: ${AGENT_PASSCODE}"
 echo "  OOR Passcode: ${OOR_PASSCODE}"
 echo ""
