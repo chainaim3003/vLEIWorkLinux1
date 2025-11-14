@@ -539,4 +539,23 @@ echo ""
 echo -e "${GREEN}✨ vLEI credential system with agent delegation completed successfully!${NC}"
 echo ""
 
+#!/bin/bash
+
+# ... existing vLEI credential issuance ...
+
+# Generate agent cards (FINAL STEP)
+echo ""
+echo "═══════════════════════════════════════════════════════════"
+echo "  Generating Agent Cards..."
+echo "═══════════════════════════════════════════════════════════"
+echo ""
+
+node generate-agent-cards.js
+
+echo ""
+echo "✓ Complete workflow finished!"
+echo "  - vLEI credentials issued and verified"
+echo "  - Agent cards generated in ./agent-cards/"
+echo ""
+
 exit 0
