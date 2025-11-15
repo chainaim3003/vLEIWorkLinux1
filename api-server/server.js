@@ -22,7 +22,8 @@ async function runVerification(agentName, oorHolderName) {
     console.log(`Starting verification for: ${agentName}`);
     
     const scriptPath = path.join(__dirname, '..', 'test-agent-verification-DEEP.sh');
-    const command = `bash ${scriptPath} ${agentName} ${oorHolderName} docker`;
+    // ADD --json flag to get structured output
+    const command = `bash ${scriptPath} ${agentName} ${oorHolderName} docker --json`;
     
     console.log(`Executing: ${command}`);
     
@@ -38,18 +39,47 @@ async function runVerification(agentName, oorHolderName) {
       console.log('Verification stderr:', stderr);
     }
     
-    // Check if verification passed
-    const success = stdout.includes('✅ DEEP VERIFICATION PASSED') || 
-                   stdout.includes('DEEP VERIFICATION PASSED');
+    // Try to parse JSON output from verification script
+    let verificationResult;
     
-    return {
-      success,
-      output: stdout,
-      error: stderr || null,
-      agent: agentName,
-      oorHolder: oorHolderName,
-      timestamp: new Date().toISOString()
-    };
+    try {
+      // Extract JSON from output (might have Docker noise)
+      const jsonMatch = stdout.match(/\{[\s\S]*"validation"[\s\S]*\}/);
+      
+      if (jsonMatch) {
+        // Successfully got JSON
+        verificationResult = JSON.parse(jsonMatch[0]);
+        console.log('Parsed verification JSON successfully');
+      } else {
+        // Fallback: No JSON found, use old string check
+        console.warn('No JSON in output, using fallback');
+        const success = stdout.includes('✅ DEEP VERIFICATION PASSED') || 
+                       stdout.includes('DEEP VERIFICATION PASSED');
+        verificationResult = {
+          success,
+          output: stdout,
+          agent: agentName,
+          oorHolder: oorHolderName,
+          timestamp: new Date().toISOString()
+        };
+      }
+    } catch (parseError) {
+      // Fallback: JSON parsing failed
+      console.error('JSON parse failed:', parseError.message);
+      const success = stdout.includes('✅ DEEP VERIFICATION PASSED') || 
+                     stdout.includes('DEEP VERIFICATION PASSED');
+      verificationResult = {
+        success,
+        output: stdout,
+        agent: agentName,
+        oorHolder: oorHolderName,
+        timestamp: new Date().toISOString(),
+        parseError: parseError.message
+      };
+    }
+    
+    return verificationResult;
+    
   } catch (error) {
     console.error(`Verification failed for ${agentName}:`, error);
     
