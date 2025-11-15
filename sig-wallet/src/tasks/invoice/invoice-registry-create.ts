@@ -1,5 +1,5 @@
 import { getOrCreateClient } from "../../client/identifiers.js";
-import { createRegistry } from "../../client/registries.js";
+import { createRegistry } from "../../client/credentials.js";
 
 // Process arguments
 const args = process.argv.slice(2);

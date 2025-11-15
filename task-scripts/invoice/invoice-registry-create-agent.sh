@@ -12,19 +12,17 @@ REGISTRY_NAME="${2:-${AGENT_ALIAS}_INVOICE_REGISTRY}"
 # Source environment variables
 source ./task-scripts/workshop-env-vars.sh
 
-# Get passcode for agent
-PASSCODE=$(get_passcode "$AGENT_ALIAS")
-
 echo "Creating invoice credential registry for agent..."
 echo "  Agent: $AGENT_ALIAS"
 echo "  Registry: $REGISTRY_NAME"
 echo ""
 
+# Agents don't use passcodes - pass empty string
 docker compose exec -T tsx-shell tsx \
   sig-wallet/src/tasks/invoice/invoice-registry-create.ts \
   docker \
   "$AGENT_ALIAS" \
-  "$PASSCODE" \
+  "" \
   "$REGISTRY_NAME"
 
 # Save registry info

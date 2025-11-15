@@ -170,6 +170,7 @@ services:
       no_cache: true
     container_name: tsx_shell
     hostname: tsx_shell
+    restart: unless-stopped
     stop_grace_period: 1s
     volumes:
       - ./task-scripts/workshop-env-vars.sh:/vlei/workshop-env-vars.sh
@@ -178,6 +179,7 @@ services:
       - ./sig-wallet:/vlei/sig-wallet
     entrypoint: tail -f /dev/null
     tty: true
+
 
   # Utility container for running
   vlei-shell:
